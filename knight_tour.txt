@@ -1,0 +1,64 @@
+import java.util.*;
+public class KnightTour {
+    static int n;
+
+    static boolean isSafe(int x, int y, int[][] board) {
+        return (x >= 0 && y >= 0 && x < n && y < n && board[x][y] == -1);
+    }
+
+    static void printSolution(int n, int[][] board) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.print(board[i][j] + "  ");
+            }
+            System.out.println();
+        }
+    }
+
+    static boolean solveKT(int n) {
+        int[][] board = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                board[i][j] = -1;
+            }
+        }
+        int[] move_x = { 2, 1, -1, -2, -2, -1, 1, 2 };
+        int[] move_y = { 1, 2, 2, 1, -1, -2, -2, -1 };
+        
+
+        board[0][0] = 0;
+        int pos = 1;
+        if (!solveKTUtil(n, board, 0,0, move_x, move_y, pos)) {
+            System.out.println("Solution does not exist");
+            return false;
+        } else {
+            printSolution(n, board);
+            return true;
+        }
+    }
+
+    static boolean solveKTUtil(int n, int[][] board, int curr_x, int curr_y, int[] move_x, int[] move_y, int pos) {
+        if (pos == n * n) {
+            return true;
+        }
+        for (int i = 0; i < 8; i++) {
+            int new_x = curr_x + move_x[i];
+            int new_y = curr_y + move_y[i];
+            if (isSafe(new_x, new_y, board)) {
+                board[new_x][new_y] = pos;
+                if (solveKTUtil(n, board, new_x, new_y, move_x, move_y, pos + 1)) {
+                    return true;
+                }
+                board[new_x][new_y] = -1;
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        
+       
+        n = Integer.parseInt(System.console().readLine("Enter the size of the chessboard (n x n):"));
+        solveKT(n);
+    }
+}

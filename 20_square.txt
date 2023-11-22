@@ -1,0 +1,23 @@
+import java.math.BigInteger;
+import java.util.*;
+
+class square {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter The Number : ");
+        BigInteger number = sc.nextBigInteger();
+        int n = number.toString().length();
+        BigInteger[] a = new BigInteger[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = number.remainder(BigInteger.TEN).multiply(BigInteger.TEN.pow(i));
+            number = number.divide(BigInteger.TEN);
+        }
+              BigInteger sum = BigInteger.ZERO;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                sum = sum.add(a[i].multiply(a[j]));
+            }
+        }
+        System.out.println("Square of the number is " + sum);
+    }
+}

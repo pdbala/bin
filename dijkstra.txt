@@ -1,0 +1,61 @@
+import java.util.*;
+
+public class ijkstra {
+    public int[] networkDelayTime(int[][] times, int N, int K) {
+        Map<Integer, List<int[]>> graph = new HashMap<>();
+        for (int[] edge : times) {
+            int u = edge[0];
+            int v = edge[1];
+            int w = edge[2];
+            graph.computeIfAbsent(u, k -> new ArrayList<>()).add(new int[] { v, w });
+        }
+
+        int[] distances = new int[N + 1];
+        Arrays.fill(distances, Integer.MAX_VALUE);
+        distances[K] = 0;
+
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>((a, b) -> distances[a] - distances[b]);
+        priorityQueue.add(K);
+
+        while (!priorityQueue.isEmpty()) {
+            int node = priorityQueue.poll();
+            if (!graph.containsKey(node))
+                continue;
+
+            for (int[] edge : graph.get(node)) {
+                int neighbor = edge[0];
+                int weight = edge[1];
+                int newDistance = distances[node] + weight;
+
+                if (newDistance < distances[neighbor]) {
+                    distances[neighbor] = newDistance;
+                    priorityQueue.add(neighbor);
+                }
+            }
+        }
+
+        int[] result = new int[N];
+        for (int i = 1; i <= N; i++) {
+            result[i - 1] = distances[i];
+        }
+
+        for (int i = 0; i < N; i++) {
+            if (result[i] == Integer.MAX_VALUE) {
+                result[i] = -1;
+            }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        ijkstra solution = new ijkstra();
+        
+         int[][] times = { { 1,2,3 }, { 2,3,8 }, { 1,4,7 }, { 4,1,2 }, { 3,4,1 }, { 2,3,2 },{3,1,5} };
+        int N = 4;
+        int K = 4;
+        int[] result = solution.networkDelayTime(times, N, K);
+        System.out.println("\n\nTime required for signal to reach individual nodes from source node " + K + ":\n\n"
+                + Arrays.toString(result) + "\n\n");
+    }
+}

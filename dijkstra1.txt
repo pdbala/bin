@@ -1,0 +1,77 @@
+import java.util.*;
+
+class Dijkstra {
+    int minimumDistance(int distance[], int vertex,
+            boolean spSet[]) {
+        int minDistance = Integer.MAX_VALUE;
+        int minIndex = -1;
+        for (int vx = 0; vx < vertex; vx++) {
+            if (!spSet[vx] && distance[vx] <= minDistance) {
+                minDistance = distance[vx];
+                minIndex = vx;
+            }
+        }
+        return minIndex;
+    }
+
+    void printSolution(int distance[], int n) {
+        System.out.println("The shortest Distance from source 0th node to all other nodes are: ");
+        for (int j = 0; j < n; j++) {
+            System.out.print("To " + j + " the shortest distance is: ");
+            if (distance[j] == Integer.MAX_VALUE) {
+                System.out.println("∞");
+            } else {
+                System.out.println(distance[j]);
+            }
+        }
+    }
+
+    void dij(int graph[][], int vertex, int s) {
+        int distance[] = new int[vertex];
+
+        boolean spSet[] = new boolean[vertex];
+        for (int j = 0; j < vertex; j++) {
+            distance[j] = Integer.MAX_VALUE;
+            spSet[j] = false;
+        }
+        distance[s] = 0;
+        for (int cnt = 0; cnt < vertex - 1; cnt++) {
+            int ux = minimumDistance(distance, vertex,
+                    spSet);
+            spSet[ux] = true;
+
+            for (int vx = 0; vx < vertex; vx++) {
+                if (!spSet[vx] && graph[ux][vx] != -1 &&
+                        distance[ux] != Integer.MAX_VALUE
+                        && distance[ux] + graph[ux][vx] < distance[vx]) {
+                    distance[vx] = distance[ux] +
+                            graph[ux][vx];
+                }
+            }
+        }
+        printSolution(distance, vertex);
+    }
+
+    public static void main(String argvs[]) {
+        Scanner sc = new Scanner(System.in);
+        int n;
+        System.out.print("Enter the number of nodes in the graph: ");
+        n = sc.nextInt();
+        int graph[][] = new int[n][n];
+        System.out.println("Enter the graph (use -1 for infinity):");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                System.out.print("graph[" + i + "][" + j +
+                        "]: ");
+                int value = sc.nextInt();
+                graph[i][j] = (value == -1) ? Integer.MAX_VALUE : value;
+            }
+        }
+        int source;
+        System.out.print("\n\nEnter source node: ");
+        source = sc.nextInt();
+        Dijkstra obj = new Dijkstra();
+        obj.dij(graph, n, source);
+        sc.close();
+    }
+}
