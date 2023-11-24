@@ -1,0 +1,26 @@
+
+def mulitiply(x,y):
+    if(len(str(x))<10 or len(str(y))<10):
+        return x*y 
+        
+    half = min(len(str(x)),len(str(y)))//2
+    
+    a = x//10**half
+    b = x%10**half
+    
+    c = y//10**half
+    d = y%10**half
+    
+    ac=mulitiply(a,c)
+    bd=mulitiply(b,d)
+    
+    ad_bc=mulitiply(a+b,c+d)-ac-bd
+    
+    return ac*10**(2*half) + ad_bc*10**half + bd 
+    
+
+
+x = int(input("Enter 1st no:"))
+y = int(input("Enter 2nd no:"))
+
+print(mulitiply(x,y))
